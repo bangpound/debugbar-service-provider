@@ -1,0 +1,25 @@
+{
+    "name": "bangpound/debugbar-service-provider",
+    "description": "Debugbar service provider for Pimple 2+",
+    "require": {
+        "maximebf/debugbar": "~1.10",
+        "pimple/pimple": ">2.0,<4"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Benjamin Doherty",
+            "email": "bjd@bangpound.org"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Bangpound\\Provider\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
