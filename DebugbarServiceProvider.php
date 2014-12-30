@@ -2,6 +2,16 @@
 
 namespace Bangpound\Provider;
 
+use DebugBar\DataCollector\ExceptionsCollector;
+use DebugBar\DataCollector\MemoryCollector;
+use DebugBar\DataCollector\MessagesCollector;
+use DebugBar\DataCollector\PhpInfoCollector;
+use DebugBar\DataCollector\RequestDataCollector;
+use DebugBar\DataCollector\TimeDataCollector;
+use DebugBar\DebugBar;
+use DebugBar\OpenHandler;
+use DebugBar\RequestIdGenerator;
+use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
 class DebugbarServiceProvider implements ServiceProviderInterface
@@ -14,21 +24,21 @@ class DebugbarServiceProvider implements ServiceProviderInterface
      * This method should only be used to configure services and parameters.
      * It should not get services.
      *
-     * @param \Pimple\Container $pimple An Container instance
+     * @param Container $pimple An Container instance
      */
-    public function register(\Pimple\Container $pimple)
+    public function register(Container $pimple)
     {
         $pimple['debugbar.base_url'] = null;
         $pimple['debugbar.base_path'] = null;
 
         $pimple['debugbar'] = function ($c) {
-            return new \DebugBar\DebugBar();
+            return new DebugBar();
         };
 
         $pimple['debugbar.collector.phpinfo'] = function ($c) {
-            return new \DebugBar\DataCollector\PhpInfoCollector();
+            return new PhpInfoCollector();
         };
-        $pimple->extend('debugbar', function (\DebugBar\DebugBar $debugbar, \Pimple\Container $c) {
+        $pimple->extend('debugbar', function (DebugBar $debugbar, Container $c) {
             $ids = preg_grep(self::COLLECTOR_MATCH, $c->keys());
 
             foreach ($ids as $id) {
@@ -39,33 +49,33 @@ class DebugbarServiceProvider implements ServiceProviderInterface
         });
 
         $pimple['debugbar.collector.messages'] = function ($c) {
-            return new \DebugBar\DataCollector\MessagesCollector();
+            return new MessagesCollector();
         };
 
         $pimple['debugbar.collector.request_data'] = function ($c) {
-            return new \DebugBar\DataCollector\RequestDataCollector();
+            return new RequestDataCollector();
         };
 
         $pimple['debugbar.collector.time_data'] = function ($c) {
-            return new \DebugBar\DataCollector\TimeDataCollector();
+            return new TimeDataCollector();
         };
 
         $pimple['debugbar.collector.memory'] = function ($c) {
-            return new \DebugBar\DataCollector\MemoryCollector();
+            return new MemoryCollector();
         };
 
         $pimple['debugbar.collector.exceptions'] = function ($c) {
-            return new \DebugBar\DataCollector\ExceptionsCollector();
+            return new ExceptionsCollector();
         };
 
         $pimple['debugbar.handler.open'] = function ($c) {
-            return new \DebugBar\OpenHandler($c['debugbar']);
+            return new OpenHandler($c['debugbar']);
         };
 
         $pimple['debugbar.generator.request_id'] = function ($c) {
-            return new \DebugBar\RequestIdGenerator();
+            return new RequestIdGenerator();
         };
-        $pimple->extend('debugbar', function (\DebugBar\DebugBar $debugbar, \Pimple\Container $c) {
+        $pimple->extend('debugbar', function (DebugBar $debugbar, Container $c) {
             $debugbar->setRequestIdGenerator($c['debugbar.generator.request_id']);
 
             return $debugbar;
