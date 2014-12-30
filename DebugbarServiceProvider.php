@@ -62,6 +62,15 @@ class DebugbarServiceProvider implements ServiceProviderInterface
             return new \DebugBar\OpenHandler($c['debugbar']);
         };
 
+        $pimple['debugbar.generator.request_id'] = function ($c) {
+            return new \DebugBar\RequestIdGenerator();
+        };
+        $pimple->extend('debugbar', function (\DebugBar\DebugBar $debugbar, \Pimple\Container $c) {
+            $debugbar->setRequestIdGenerator($c['debugbar.generator.request_id']);
+
+            return $debugbar;
+        });
+
         $pimple['debugbar.renderer'] = function ($c) {
             return $c['debugbar']->getJavascriptRenderer($c['debugbar.base_url'], $c['debugbar.base_path']);
         };
